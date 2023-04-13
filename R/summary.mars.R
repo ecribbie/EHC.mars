@@ -1,3 +1,13 @@
+#' summary.mars
+#'
+#' @param mars_obj A mars class object, created using the EHC.MARS::mars() function 
+#'
+#' @return Outputs a summary of the mars object
+#' @export
+#'
+#' @examples 
+#' mars_object<-mars(formula, data, control = mars.control()) 
+#' summary(mars_object)
 summary.mars<-function(mars_obj){
   sm<-summary.lm(mars_obj)
   for (i in 1:length(rownames(sm$coefficients))){

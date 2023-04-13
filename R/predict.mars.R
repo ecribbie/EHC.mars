@@ -1,12 +1,13 @@
-#' Title
+#' make_B
+#' 
+#' @description Function used in predict.mars to create initial matrix
 #'
-#' @param X
-#' @param Bfuncs
+#' @param X data matrix from mars
+#' @param Bfuncs Bfuncs data from mars object
 #'
-#' @return
+#' @return Initialized matrix for predict.mars function
 #' @export
 #'
-#' @examples
 make_B<-function(X,Bfuncs){
   B=matrix(1,nrow=nrow(X),ncol=length(Bfuncs))
   for (i in 2:ncol(B)){
@@ -17,15 +18,19 @@ make_B<-function(X,Bfuncs){
   return(B)
 }
 
-#' Title
+#' predict.mars
 #'
-#' @param object
-#' @param newdata
+#' @description function used to predict response value using mars object on set of data
 #'
-#' @return
+#' @param object mars class object created with EHC.MARS::mars function
+#' @param newdata dataset containing data to predict on (optional, if none provided training data for mars object will be used)
+#'
+#' @return predictions using mars object on new data set
 #' @export
 #'
 #' @examples
+#' mars_object<-mars(formula, data, control = mars.control()) 
+#' predict(mars_object,new_data)
 predict.mars <- function(object,newdata) {
   if(missing(newdata) || is.null(newdata)) {
     B <- as.matrix(object$B)

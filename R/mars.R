@@ -1,29 +1,18 @@
 #' Mars Constructor
 #'
-#'@description
-#'Description here
+#' @param control a mars control object created with EHC.MARS::mars.control function
 #'
-#' @param control
-#'
-#' @return
-#' @export
-#'
-#' @examples
+#' @return mars control object
+
 new_mars.control <- function(control) {
   structure(control,class="mars.control")}
 
 
 #' Mars Helper
 #'
-#'@description
-#'Description here
+#' @param control Mars control object created with EHC.MARS::mars.control function
 #'
-#' @param control Mars control object
-#'
-#' @return
-#' @export
-#'
-#' @examples
+#' @return mars control object
 validate_mars.control <- function(control) {
   stopifnot(is.integer(control$Mmax),is.numeric(control$d),
             is.logical(control$trace))
@@ -39,17 +28,11 @@ validate_mars.control <- function(control) {
 
 #' Mars Constructor
 #'
-#'@description
-#'Description here
-#' @param Mmax
-#' @param d
-#' @param trace
+#' @param Mmax max number of splits for mars function
+#' @param d d value used in GCV criterion for mars
+#' @param trace Logical value for if additional output should be printed when run
 #'
-#' @return
-#' @export
-#'
-#' @examples
-#'
+#' @return mars control object
 mars.control <- function(Mmax=2,d=3,trace=FALSE) {
   Mmax <- as.integer(Mmax)
   control <- list(Mmax=Mmax,d=d,trace=trace)
@@ -60,13 +43,12 @@ mars.control <- function(Mmax=2,d=3,trace=FALSE) {
 
 #' Forward stepwise selection
 #'
-#'@description
-#'Description here
+#' @param y response data
+#' @param x explanatory data
+#' @param control mars control object created with EHC.MARS::mars.control function
 #'
-#' @return
-#' @export
-#'
-#' @examples
+#' @return list of y,B, and Bfuncs objects from forward selection for mars
+
 fwd_stepwise<-function(y,x,control=mars.control()){
   N<-length(y)
   n<-ncol(x)
@@ -109,15 +91,10 @@ fwd_stepwise<-function(y,x,control=mars.control()){
 
 #' init_B
 #'
-#' @description
-#' Description here
-#' @param N
-#' @param Mmax
+#' @param N number of rows for data matrix
+#' @param Mmax number of columns not including intercept
 #'
-#' @return
-#' @export
-#'
-#' @examples
+#' @return initialized matrix
 init_B<-function(N,Mmax){
   B<-data.frame(matrix(nrow=N,ncol=Mmax+1))
   B[,1]<-1
@@ -128,14 +105,11 @@ init_B<-function(N,Mmax){
 
 #' LOF
 #'
-#' @param formula
-#' @param data
-#' @param control
+#' @param formula formula used in linear model
+#' @param data dataset
+#' @param control mars control object, created with EHC.MARS::mars.control function
 #'
-#' @return
-#' @export
-#'
-#' @examples
+#' @return GCV criterion value
 LOF<-function(formula,data,control){
   mod<-lm(formula,data)
   RSS<-sum(residuals(mod)^2)
@@ -147,22 +121,25 @@ LOF<-function(formula,data,control){
 }
 
 
-#' h
+#' hinge function
 #'
-#' @param x
-#' @param s
-#' @param t
+#' @param x x value(s)
+#' @param s side (+/- 1)
+#' @param t split value
 #'
-#' @return
-#' @export
-#'
-#' @examples
+#' @return hinge function ouput value
 h<-function(x,s,t){
   out<-pmax(0,s*(x-t))
   return(out)
 }
 
 
+#' split_points
+#'
+#' @param x x data
+#' @param B B matrix
+#'
+#' @return possible points to split on
 split_points<-function(x,B){
   out<-sort(unique(x[B>0]))[-length(sort(unique(x[B>0])))]
   return(out)
@@ -171,16 +148,10 @@ split_points<-function(x,B){
 
 #' Backward stepwise selection
 #'
-#' @description
-#' description here
+#' @param fwd output from forward selection
+#' @param control mars control object
 #'
-#' @param x
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
+#' @return list of y, B, Bfuncs outputs from backward selection
 bwd_stepwise<-function(fwd,control){
   Mmax<-ncol(fwd$B)-1
   Jstar<-2:(Mmax+1)
@@ -221,18 +192,17 @@ bwd_stepwise<-function(fwd,control){
 #' Mars
 #'
 #' @description
-#' Description of what mars is
+#' Tool to compute multivariate adaptive regression splines (mars) regression
 #'
-#' @param formula a formula
-#' @param data dataset
-#' @param control mars control object (can be created using mars.control)
+#' @param formula a formula for linear model
+#' @param data dataset with response (y) and explanatory variables
+#' @param control mars control object (can be created using EHC.MARS::mars.control)
 #'
-#' @return
-#' Mars returns ...
+#' @return Mars class object 
 #' @export
 #'
 #' @examples
-#'
+#'mars_object<-mars(formula, data, control = mars.control()) 
 mars<-function(formula,data,control=mars.control()){
   cc<-match.call()
   mf<-model.frame(formula,data)
