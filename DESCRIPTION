@@ -1,0 +1,13 @@
+Package: EHC.MARS
+Title: Multivariate Adaptive Regression Spline
+Version: 0.0.0.9000
+Authors@R: c(
+    person(given="Evan", family="Cribbie", email="cribbie16@gmail.com", role = c("aut", "cre")),
+    person(given="firt",family="last",email="email",role=c("aut")),
+    person(given="firt",family="last",email="email",role=c("aut"))
+    )
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
