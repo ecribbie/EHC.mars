@@ -62,7 +62,7 @@ fwd_stepwise<-function(y,x,control=mars.control()){
     for (m in 1:M){
       svars<-setdiff(1:n,Bfuncs[[m]][,"v"])
       if (control$trace){
-        cat("M, m, svars",M,m,svars,"\n")
+        cat("M:m:svars= ",M,":",m,":",svars,"\n")
       }
       for (v in svars){
         tt<-split_points(x[,v],B[,m])
