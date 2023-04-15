@@ -1,14 +1,48 @@
-#' Mars Constructor
+#' Mars
 #'
-#' @param control a mars control object created with EHC.MARS::mars.control function
+#' @description
+#' Tool to compute multivariate adaptive regression splines (mars) regression
+#'
+#' @param formula a formula for linear model
+#' @param data dataset with response (y) and explanatory variables
+#' @param control mars control object (can be created using EHC.MARS::mars.control)
+#'
+#' @return Mars class object 
+#' @export
+#'
+#' @examples
+#'mars_object<-mars(formula, data, control = mars.control()) 
+mars<-function(formula,data,control=mars.control()){
+  cc<-match.call()
+  mf<-model.frame(formula,data)
+  y<-model.response(mf)
+  mt<-attr(mf, "terms")
+  x<-model.matrix(mt,mf)[,-1,drop=F]
+  x_names<-colnames(x)
+  control<-validate_mars.control(control)
+  fwd<-fwd_stepwise(y,x,control)
+  bwd<-bwd_stepwise(fwd,control)
+  fit<-lm(y~.-1,data=data.frame(y=y,bwd$B))
+  out<-c(list(call=cc,formula=formula,y=y,B=bwd$B,Bfuncs=bwd$Bfuncs,x_names=x_names),fit)
+  class(out)<-c("mars",class(fit))
+  return(out)
+}
+
+#' Mars Control
+#'
+#' @param Mmax max number of splits for mars function
+#' @param d d value used in GCV criterion for mars
+#' @param trace Logical value for if additional output should be printed when run
 #'
 #' @return mars control object
+mars.control <- function(Mmax=2,d=3,trace=FALSE) {
+  Mmax <- as.integer(Mmax)
+  control <- list(Mmax=Mmax,d=d,trace=trace)
+  control <- validate_mars.control(control)
+  new_mars.control(control)
+}
 
-new_mars.control <- function(control) {
-  structure(control,class="mars.control")}
-
-
-#' Mars Helper
+#' Mars Validator
 #'
 #' @param control Mars control object created with EHC.MARS::mars.control function
 #'
@@ -25,20 +59,14 @@ validate_mars.control <- function(control) {
   control
 }
 
-
 #' Mars Constructor
 #'
-#' @param Mmax max number of splits for mars function
-#' @param d d value used in GCV criterion for mars
-#' @param trace Logical value for if additional output should be printed when run
+#' @param control a mars control object created with EHC.MARS::mars.control function
 #'
 #' @return mars control object
-mars.control <- function(Mmax=2,d=3,trace=FALSE) {
-  Mmax <- as.integer(Mmax)
-  control <- list(Mmax=Mmax,d=d,trace=trace)
-  control <- validate_mars.control(control)
-  new_mars.control(control)
-}
+new_mars.control <- function(control) {
+  structure(control,class="mars.control")}
+
 
 
 #' Forward stepwise selection
@@ -88,64 +116,6 @@ fwd_stepwise<-function(y,x,control=mars.control()){
   return(list(y=y,B=B,Bfuncs=Bfuncs))
 }
 
-
-#' init_B
-#'
-#' @param N number of rows for data matrix
-#' @param Mmax number of columns not including intercept
-#'
-#' @return initialized matrix
-init_B<-function(N,Mmax){
-  B<-data.frame(matrix(nrow=N,ncol=Mmax+1))
-  B[,1]<-1
-  names(B)<-paste0("B",0:Mmax)
-  return(B)
-}
-
-
-#' LOF
-#'
-#' @param formula formula used in linear model
-#' @param data dataset
-#' @param control mars control object, created with EHC.MARS::mars.control function
-#'
-#' @return GCV criterion value
-LOF<-function(formula,data,control){
-  mod<-lm(formula,data)
-  RSS<-sum(residuals(mod)^2)
-  N<-nrow(data)
-  M<-length(coef(mod))-1
-  c<-sum(diag(hatvalues(mod)))+control$d*M
-  out<-RSS*N/(N-c)^2
-  return(out)
-}
-
-
-#' hinge function
-#'
-#' @param x x value(s)
-#' @param s side (+/- 1)
-#' @param t split value
-#'
-#' @return hinge function ouput value
-h<-function(x,s,t){
-  out<-pmax(0,s*(x-t))
-  return(out)
-}
-
-
-#' split_points
-#'
-#' @param x x data
-#' @param B B matrix
-#'
-#' @return possible points to split on
-split_points<-function(x,B){
-  out<-sort(unique(x[B>0]))[-length(sort(unique(x[B>0])))]
-  return(out)
-}
-
-
 #' Backward stepwise selection
 #'
 #' @param fwd output from forward selection
@@ -188,33 +158,55 @@ bwd_stepwise<-function(fwd,control){
   return(list(y=fwd$y,B=fwd$B[,Jstar],Bfuncs=fwd$Bfuncs[Jstar]))
 }
 
+#' init_B
+#'
+#' @param N number of rows for data matrix
+#' @param Mmax number of columns not including intercept
+#'
+#' @return initialized matrix
+init_B<-function(N,Mmax){
+  B<-data.frame(matrix(nrow=N,ncol=Mmax+1))
+  B[,1]<-1
+  names(B)<-paste0("B",0:Mmax)
+  return(B)
+}
 
-#' Mars
+#' LOF
 #'
-#' @description
-#' Tool to compute multivariate adaptive regression splines (mars) regression
+#' @param formula formula used in linear model
+#' @param data dataset
+#' @param control mars control object, created with EHC.MARS::mars.control function
 #'
-#' @param formula a formula for linear model
-#' @param data dataset with response (y) and explanatory variables
-#' @param control mars control object (can be created using EHC.MARS::mars.control)
+#' @return GCV criterion value
+LOF<-function(formula,data,control){
+  mod<-lm(formula,data)
+  RSS<-sum(residuals(mod)^2)
+  N<-nrow(data)
+  M<-length(coef(mod))-1
+  c<-sum(diag(hatvalues(mod)))+control$d*M
+  out<-RSS*N/(N-c)^2
+  return(out)
+}
+
+#' hinge function
 #'
-#' @return Mars class object 
-#' @export
+#' @param x x value(s)
+#' @param s side (+/- 1)
+#' @param t split value
 #'
-#' @examples
-#'mars_object<-mars(formula, data, control = mars.control()) 
-mars<-function(formula,data,control=mars.control()){
-  cc<-match.call()
-  mf<-model.frame(formula,data)
-  y<-model.response(mf)
-  mt<-attr(mf, "terms")
-  x<-model.matrix(mt,mf)[,-1,drop=F]
-  x_names<-colnames(x)
-  control<-validate_mars.control(control)
-  fwd<-fwd_stepwise(y,x,control)
-  bwd<-bwd_stepwise(fwd,control)
-  fit<-lm(y~.-1,data=data.frame(y=y,bwd$B))
-  out<-c(list(call=cc,formula=formula,y=y,B=bwd$B,Bfuncs=bwd$Bfuncs,x_names=x_names),fit)
-  class(out)<-c("mars",class(fit))
+#' @return hinge function ouput value
+h<-function(x,s,t){
+  out<-pmax(0,s*(x-t))
+  return(out)
+}
+
+#' split_points
+#'
+#' @param x x data
+#' @param B B matrix
+#'
+#' @return possible points to split on
+split_points<-function(x,B){
+  out<-sort(unique(x[B>0]))[-length(sort(unique(x[B>0])))]
   return(out)
 }

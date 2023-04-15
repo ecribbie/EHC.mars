@@ -1,23 +1,3 @@
-#' make_B
-#' 
-#' @description Function used in predict.mars to create initial matrix
-#'
-#' @param X data matrix from mars
-#' @param Bfuncs Bfuncs data from mars object
-#'
-#' @return Initialized matrix for predict.mars function
-#' @export
-#'
-make_B<-function(X,Bfuncs){
-  B=matrix(1,nrow=nrow(X),ncol=length(Bfuncs))
-  for (i in 2:ncol(B)){
-    for (j in 1:nrow(Bfuncs[[i]]))
-      B[,i]<-B[,i]*h(X[,Bfuncs[[i]][j,][2]],Bfuncs[[i]][j,][1],Bfuncs[[i]][j,][3])
-  }
-  colnames(B)<-paste0("B",(0:(ncol(B)-1)))
-  return(B)
-}
-
 #' predict.mars
 #'
 #' @description function used to predict response value using mars object on set of data
@@ -45,4 +25,24 @@ predict.mars <- function(object,newdata) {
   }
   beta <- object$coefficients
   drop(B %*% beta)
+}
+
+#' make_B
+#' 
+#' @description Function used in predict.mars to create initial matrix
+#'
+#' @param X data matrix from mars
+#' @param Bfuncs Bfuncs data from mars object
+#'
+#' @return Initialized matrix for predict.mars function
+#' @export
+#'
+make_B<-function(X,Bfuncs){
+  B=matrix(1,nrow=nrow(X),ncol=length(Bfuncs))
+  for (i in 2:ncol(B)){
+    for (j in 1:nrow(Bfuncs[[i]]))
+      B[,i]<-B[,i]*h(X[,Bfuncs[[i]][j,][2]],Bfuncs[[i]][j,][1],Bfuncs[[i]][j,][3])
+  }
+  colnames(B)<-paste0("B",(0:(ncol(B)-1)))
+  return(B)
 }
