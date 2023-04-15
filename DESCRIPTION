@@ -12,8 +12,7 @@ Description: This package implements Multivariate Adaptive Regression
           piecewise linear functions, making it suitable for various applications
           such as predictive modeling and data analysis. With 'mars', users can fit
           MARS models, perform model selection, visualize results, interpret output, and predict future values.
-          
-License: use_gpl3_license()
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
