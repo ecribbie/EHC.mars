@@ -7,8 +7,11 @@
 new_mars.control(control)
 }
 \arguments{
-\item{control}{}
+\item{control}{a mars control object created with EHC.MARS::mars.control function}
+}
+\value{
+mars control object
 }
 \description{
-Description here
+Mars Constructor
 }

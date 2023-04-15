@@ -6,6 +6,16 @@
 \usage{
 fwd_stepwise(y, x, control = mars.control())
 }
+\arguments{
+\item{y}{response data}
+
+\item{x}{explanatory data}
+
+\item{control}{mars control object created with EHC.MARS::mars.control function}
+}
+\value{
+list of y,B, and Bfuncs objects from forward selection for mars
+}
 \description{
-Description here
+Forward stepwise selection
 }

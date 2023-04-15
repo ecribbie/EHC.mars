@@ -2,13 +2,22 @@
 % Please edit documentation in R/predict.mars.R
 \name{predict.mars}
 \alias{predict.mars}
-\title{Title}
+\title{predict.mars}
 \usage{
 \method{predict}{mars}(object, newdata)
 }
 \arguments{
-\item{newdata}{}
+\item{object}{mars class object created with EHC.MARS::mars function}
+
+\item{newdata}{dataset containing data to predict on (optional, if none provided training data for mars object will be used)}
+}
+\value{
+predictions using mars object on new data set
 }
 \description{
-Title
+function used to predict response value using mars object on set of data
+}
+\examples{
+mars_object<-mars(formula, data, control = mars.control()) 
+predict(mars_object,new_data)
 }

@@ -2,13 +2,20 @@
 % Please edit documentation in R/mars.R
 \name{mars.control}
 \alias{mars.control}
-\title{Mars Constructor}
+\title{Mars Control}
 \usage{
 mars.control(Mmax = 2, d = 3, trace = FALSE)
 }
 \arguments{
-\item{trace}{}
+\item{Mmax}{max number of splits for mars function}
+
+\item{d}{d value used in GCV criterion for mars}
+
+\item{trace}{Logical value for if additional output should be printed when run}
+}
+\value{
+mars control object
 }
 \description{
-Description here
+Mars Control
 }

@@ -7,7 +7,14 @@
 LOF(formula, data, control)
 }
 \arguments{
-\item{control}{}
+\item{formula}{formula used in linear model}
+
+\item{data}{dataset}
+
+\item{control}{mars control object, created with EHC.MARS::mars.control function}
+}
+\value{
+GCV criterion value
 }
 \description{
 LOF

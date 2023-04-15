@@ -7,8 +7,13 @@
 bwd_stepwise(fwd, control)
 }
 \arguments{
-\item{x}{}
+\item{fwd}{output from forward selection}
+
+\item{control}{mars control object}
+}
+\value{
+list of y, B, Bfuncs outputs from backward selection
 }
 \description{
-description here
+Backward stepwise selection
 }

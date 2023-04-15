@@ -2,20 +2,100 @@
 % Please edit documentation in R/mars.R
 \name{mars}
 \alias{mars}
-\title{Mars}
+\title{mars: Multivariate Adaptive Regression Splines}
 \usage{
 mars(formula, data, control = mars.control())
 }
 \arguments{
-\item{formula}{a formula}
+\item{formula}{a formula for linear model}
 
-\item{data}{dataset}
+\item{data}{dataset with response variable (y) and explanatory variables}
 
-\item{control}{mars control object (can be created using mars.control)}
+\item{control}{mars control object (can be created using EHC.MARS::mars.control, See Details for more information)}
 }
 \value{
-Mars returns ...
+\code{mars} returns an object of class \code{"mars"}. The functions \code{summary} and \code{anova} are used to obtain and print a summary and analysis of variance table of the results.
+
+an object of class \code{"mars"} is a list contains the following components:
+\itemize{
+\item \code{call}   the matched call.
+\item \code{formula}  the matched formula.
+\item \code{y}  the response variable.
+\item \code{B}  a matrix represents the basis functions (terms) used in the MARS model and their coefficients
+\item \code{Bfuncs}   a list of functions that represent the basis functions (terms) used in the MARS model
+\item \code{x_names}   names of the predictor variables used
+\item \code{coefficients}   a named vector of coefficients
+\item \code{residuals}  the residuals, that is response minus fitted values.
+\item \code{fitted.values}  the fitted mean values
+\item \code{df.residual}  the residual degrees of freedom.
+\item \code{xlevels}   (only where relevant) a record of the levels of the factors used in fitting.
+\item \code{model}  the fitted model.
+\item \code{terms}  the \link{terms} object used.
+}
 }
 \description{
-Description of what mars is
+\code{mars} is used for fitting Multivariate Adaptive Regression Splines
+(MARS) models, which are non-parametric regression models that capture complex interactions between predictor variables.
+}
+\section{Details}{
+
+The \code{mars} function uses a formula-based approach to specify MARS models.
+The formula should follow the standard R formula syntax, with 'response' on the
+left-hand side and 'terms' on the right-hand side. The 'terms' specification can include
+main effects, interactions, and higher-order terms.
+
+The \code{mars} function fits a MARS model to the data, which involves automatically selecting
+basis functions (e.g., hinge functions) and their locations in the predictor space, and
+estimating coefficients for each basis function using a forward-backward algorithm. The resulting
+MARS model captures complex interactions between predictor variables, making it a powerful tool for modeling nonlinear relationships in data.
+
+\code{mars.control} is used to create a MARS control object with the following arguments:
+\itemize{
+\item \code{Mmax} max number of splits for mars function (default is 2)
+\item \code{d} d value used in GCV criterion for mars (default is 3)
+\item \code{trace} Logical value for if additional output should be printed when run (default is False)
+}
+}
+
+\examples{
+#https://www.kaggle.com/datasets/joyshil0599/mlb-hitting-and-pitching-stats-through-the-years
+dat<-read.csv("data/pitcher_data.csv")
+dat$AVG<-as.numeric(dat$AVG)
+dat1<-na.omit(dat)[1:500,]
+mars_obj<-mars(Win~Games.played+Innings.pitched+Hit.Batsmen+base.on.balls+WHIP+AVG,dat1,mars.control(Mmax=8,d=3,trace=T))
+summary(mars_obj)
+plot(mars_obj)
+pred_dat<-na.omit(dat)[500:600,]
+predict(mars_obj,pred_dat)
+
+#https://www.kaggle.com/datasets/neuromusic/avocado-prices
+dat2<-read.csv("data/avocado.csv")[1:400,]
+mars_obj2<-mars(AveragePrice~Total.Volume+X4046+X4225+X4770+Small.Bags+Large.Bags+XLarge.Bags+year,dat2)
+print(mars_obj2)
+anova(mars_obj2)
+
+#https://www.kaggle.com/datasets/grubenm/austin-weather
+dat3<-read.csv("data/austin_weather.csv")[1:400,]
+dat3$PrecipitationSumInches<-as.numeric(dat3$PrecipitationSumInches)
+dat3<-na.omit(dat3)
+dat3<-dat3[-305,]
+mars_obj3<-mars(PrecipitationSumInches~HumidityAvgPercent+TempAvgF+SeaLevelPressureAvgInches+WindAvgMPH,dat3)
+summary(mars_obj3)
+}
+\references{
+Friedman, J. H. (1991). Multivariate Adaptive Regression Splines. The Annals of Statistics, 19(1), 1-67.
+}
+\seealso{
+\code{summary.mars} for summaries and \code{anova.mars} for the ANOVA table
+
+\code{plot.mars} for visualizing the fitted model, \code{print.mars} for ouputting call and coefficients used for creating MARS object.
+
+\code{predict.mars} for making predictions using the fitted model.
+}
+\author{
+Evan Cribbie
+
+Huong Thi Mai Nguyen
+
+Christine Orcullo
 }

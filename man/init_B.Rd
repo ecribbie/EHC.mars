@@ -7,8 +7,13 @@
 init_B(N, Mmax)
 }
 \arguments{
-\item{Mmax}{}
+\item{N}{number of rows for data matrix}
+
+\item{Mmax}{number of columns not including intercept}
+}
+\value{
+initialized matrix
 }
 \description{
-Description here
+init_B
 }

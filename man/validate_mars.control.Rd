@@ -2,13 +2,16 @@
 % Please edit documentation in R/mars.R
 \name{validate_mars.control}
 \alias{validate_mars.control}
-\title{Mars Helper}
+\title{Mars Validator}
 \usage{
 validate_mars.control(control)
 }
 \arguments{
-\item{control}{Mars control object}
+\item{control}{Mars control object created with EHC.MARS::mars.control function}
+}
+\value{
+mars control object
 }
 \description{
-Description here
+Mars Validator
 }

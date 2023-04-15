@@ -2,13 +2,20 @@
 % Please edit documentation in R/mars.R
 \name{h}
 \alias{h}
-\title{h}
+\title{hinge function}
 \usage{
 h(x, s, t)
 }
 \arguments{
-\item{t}{}
+\item{x}{x value(s)}
+
+\item{s}{side (+/- 1)}
+
+\item{t}{split value}
+}
+\value{
+hinge function ouput value
 }
 \description{
-h
+hinge function
 }

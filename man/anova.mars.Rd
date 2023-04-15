@@ -2,13 +2,20 @@
 % Please edit documentation in R/anova.mars.R
 \name{anova.mars}
 \alias{anova.mars}
-\title{Title}
+\title{anova.mars}
 \usage{
 \method{anova}{mars}(mars_obj)
 }
 \arguments{
-\item{mars_obj}{}
+\item{mars_obj}{mars class object, created using EHC.MARS::mars function}
+}
+\value{
+anova of mars object regression
 }
 \description{
-Title
+anova.mars
+}
+\examples{
+mars_object<-mars(formula, data, control = mars.control()) 
+anova(mars_object)
 }

@@ -2,13 +2,18 @@
 % Please edit documentation in R/predict.mars.R
 \name{make_B}
 \alias{make_B}
-\title{Title}
+\title{make_B}
 \usage{
 make_B(X, Bfuncs)
 }
 \arguments{
-\item{Bfuncs}{}
+\item{X}{data matrix from mars}
+
+\item{Bfuncs}{Bfuncs data from mars object}
+}
+\value{
+Initialized matrix for predict.mars function
 }
 \description{
-Title
+Function used in predict.mars to create initial matrix
 }

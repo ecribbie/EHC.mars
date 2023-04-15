@@ -1,23 +1,107 @@
-#' Mars
+#' mars: Multivariate Adaptive Regression Splines
 #'
 #' @description
-#' Tool to compute multivariate adaptive regression splines (mars) regression
+#' `mars` is used for fitting Multivariate Adaptive Regression Splines
+#'  (MARS) models, which are non-parametric regression models that capture complex interactions between predictor variables.
 #'
-#' @param formula a formula for linear model
-#' @param data dataset with response (y) and explanatory variables
-#' @param control mars control object (can be created using EHC.MARS::mars.control)
+#' @param formula   a formula for linear model
+#' @param data      dataset with response variable (y) and explanatory variables
+#' @param control   mars control object (can be created using EHC.MARS::mars.control, See Details for more information)
 #'
-#' @return Mars class object 
+#' @return `mars` returns an object of class `"mars"`. The functions `summary` and `anova` are used to obtain and print a summary and analysis of variance table of the results.
+#'
+#'  an object of class `"mars"` is a list contains the following components:
+#'
+#' * `call`   the matched call.
+
+#' * `formula`  the matched formula.
+#' * `y`  the response variable.
+#'
+#' * `B`  a matrix represents the basis functions (terms) used in the MARS model and their coefficients
+#' * `Bfuncs`   a list of functions that represent the basis functions (terms) used in the MARS model
+#' *  `x_names`   names of the predictor variables used
+#'
+#'
+#'
+#'
+#' * `coefficients`   a named vector of coefficients
+#' * `residuals`  the residuals, that is response minus fitted values.
+#'
+#'
+#' * `fitted.values`  the fitted mean values
+#' * `df.residual`  the residual degrees of freedom.
+#' *  `xlevels`   (only where relevant) a record of the levels of the factors used in fitting.
+#'
+#'
+#' * `model`  the fitted model.
+#' * `terms`  the [terms] object used.
+#'
+#'
+
+
+#'
 #' @export
+#' @author
+#' Evan Cribbie
+#'
+#' Huong Thi Mai Nguyen
+#'
+#'
+#' Christine Orcullo
+#' @references Friedman, J. H. (1991). Multivariate Adaptive Regression Splines. The Annals of Statistics, 19(1), 1-67.
+
+#' @seealso
+#'  `summary.mars` for summaries and `anova.mars` for the ANOVA table
+#'
+#'  `plot.mars` for visualizing the fitted model, `print.mars` for ouputting call and coefficients used for creating MARS object.
+#'
+#' `predict.mars` for making predictions using the fitted model.
+#' @section Details:
+#' The `mars` function uses a formula-based approach to specify MARS models.
+#' The formula should follow the standard R formula syntax, with 'response' on the
+#' left-hand side and 'terms' on the right-hand side. The 'terms' specification can include
+#' main effects, interactions, and higher-order terms.
+#'
+#' The `mars` function fits a MARS model to the data, which involves automatically selecting
+#' basis functions (e.g., hinge functions) and their locations in the predictor space, and
+#' estimating coefficients for each basis function using a forward-backward algorithm. The resulting
+#' MARS model captures complex interactions between predictor variables, making it a powerful tool for modeling nonlinear relationships in data.
+#'
+#' `mars.control` is used to create a MARS control object with the following arguments:
+#'
+#' * `Mmax` max number of splits for mars function (default is 2)
+#' * `d` d value used in GCV criterion for mars (default is 3)
+#' * `trace` Logical value for if additional output should be printed when run (default is False)
 #'
 #' @examples
-#'mars_object<-mars(formula, data, control = mars.control()) 
+#'#https://www.kaggle.com/datasets/joyshil0599/mlb-hitting-and-pitching-stats-through-the-years
+#' dat<-read.csv("data/pitcher_data.csv")
+#' dat$AVG<-as.numeric(dat$AVG)
+#' dat1<-na.omit(dat)[1:500,]
+#' mars_obj<-mars(Win~Games.played+Innings.pitched+Hit.Batsmen+base.on.balls+WHIP+AVG,dat1,mars.control(Mmax=8,d=3,trace=T))
+#' summary(mars_obj)
+#' plot(mars_obj)
+#' pred_dat<-na.omit(dat)[500:600,]
+#' predict(mars_obj,pred_dat)
+#'
+#' #https://www.kaggle.com/datasets/neuromusic/avocado-prices
+#' dat2<-read.csv("data/avocado.csv")[1:400,]
+#' mars_obj2<-mars(AveragePrice~Total.Volume+X4046+X4225+X4770+Small.Bags+Large.Bags+XLarge.Bags+year,dat2)
+#' print(mars_obj2)
+#' anova(mars_obj2)
+#'
+#' #https://www.kaggle.com/datasets/grubenm/austin-weather
+#' dat3<-read.csv("data/austin_weather.csv")[1:400,]
+#' dat3$PrecipitationSumInches<-as.numeric(dat3$PrecipitationSumInches)
+#' dat3<-na.omit(dat3)
+#' dat3<-dat3[-305,]
+#' mars_obj3<-mars(PrecipitationSumInches~HumidityAvgPercent+TempAvgF+SeaLevelPressureAvgInches+WindAvgMPH,dat3)
+#' summary(mars_obj3)
 mars<-function(formula,data,control=mars.control()){
   cc<-match.call()
   mf<-model.frame(formula,data)
   y<-model.response(mf)
   mt<-attr(mf, "terms")
-  x<-model.matrix(mt,mf)[,-1,drop=F]
   x_names<-colnames(x)
   control<-validate_mars.control(control)
   fwd<-fwd_stepwise(y,x,control)
@@ -27,6 +111,7 @@ mars<-function(formula,data,control=mars.control()){
   class(out)<-c("mars",class(fit))
   return(out)
 }
+
 
 #' Mars Control
 #'
@@ -210,3 +295,4 @@ split_points<-function(x,B){
   out<-sort(unique(x[B>0]))[-length(sort(unique(x[B>0])))]
   return(out)
 }
+
