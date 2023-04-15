@@ -3,7 +3,7 @@
 - Huong Thi Mai Nguyen (Hayley)
 - Christine Orcullo 
 
-#Files
+# Files
 - data: 3 CSV files for the test suites/examples
 - man: documentation files for the functions and objects in roxygen2 format
 - R: R script files that contain the actual code for the functions and objects
