@@ -3,11 +3,16 @@ Title: Multivariate Adaptive Regression Spline
 Version: 0.0.0.9000
 Authors@R: c(
     person(given="Evan", family="Cribbie", email="cribbie16@gmail.com", role = c("aut", "cre")),
-    person(given="firt",family="last",email="email",role=c("aut")),
-    person(given="firt",family="last",email="email",role=c("aut"))
+    person(given="Hayley",family="Nguyen",email="hayleyn@sfu.ca",role=c("aut")),
+    person(given="Christine",family="Orcullo",email="email",role=c("aut"))
     )
-Description: What the package does (one paragraph).
-License: MIT + file LICENSE
+Description: This package implements Multivariate Adaptive Regression 
+          Splines (MARS), a versatile and interpretable regression modeling 
+          technique. MARS captures complex nonlinear relationships using 
+          piecewise linear functions, making it suitable for various applications
+          such as predictive modeling and data analysis. With 'mars', users can fit
+          MARS models, perform model selection, visualize results, interpret output, and predict future values.
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
