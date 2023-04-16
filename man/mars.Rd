@@ -2,7 +2,8 @@
 % Please edit documentation in R/mars.R
 \name{mars}
 \alias{mars}
-\title{mars: Multivariate Adaptive Regression Splines}
+\title{mars: Multivariate Adaptive Regression Splines
+Download from: https://github.com/ecribbie/EHC.mars.git}
 \usage{
 mars(formula, data, control = mars.control())
 }

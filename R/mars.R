@@ -1,4 +1,5 @@
 #' mars: Multivariate Adaptive Regression Splines
+#' Download from: https://github.com/ecribbie/EHC.mars.git
 #'
 #' @description
 #' `mars` is used for fitting Multivariate Adaptive Regression Splines
