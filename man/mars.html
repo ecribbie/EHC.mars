@@ -1,0 +1,185 @@
+<!DOCTYPE html><html><head><title>R: mars: Multivariate Adaptive Regression Splines</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table style="width: 100%;"><tr><td>mars</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>mars: Multivariate Adaptive Regression Splines</h2>
+
+<h3>Description</h3>
+
+<p><code>mars</code> is used for fitting Multivariate Adaptive Regression Splines
+(MARS) models, which are non-parametric regression models that capture complex interactions between predictor variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>mars(formula, data, control = mars.control())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;"><td><code>formula</code></td>
+<td>
+<p>a formula for linear model</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>data</code></td>
+<td>
+<p>dataset with response variable (y) and explanatory variables</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>control</code></td>
+<td>
+<p>mars control object (can be created using EHC.MARS::mars.control, See Details for more information)</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p><code>mars</code> returns an object of class <code>"mars"</code>. The functions <code>summary</code> and <code>anova</code> are used to obtain and print a summary and analysis of variance table of the results.
+</p>
+<p>an object of class <code>"mars"</code> is a list contains the following components:
+</p>
+
+<ul>
+<li> <p><code>call</code>   the matched call.
+</p>
+</li>
+<li> <p><code>formula</code>  the matched formula.
+</p>
+</li>
+<li> <p><code>y</code>  the response variable.
+</p>
+</li>
+<li> <p><code>B</code>  a matrix represents the basis functions (terms) used in the MARS model and their coefficients
+</p>
+</li>
+<li> <p><code>Bfuncs</code>   a list of functions that represent the basis functions (terms) used in the MARS model
+</p>
+</li>
+<li> <p><code>x_names</code>   names of the predictor variables used
+</p>
+</li>
+<li> <p><code>coefficients</code>   a named vector of coefficients
+</p>
+</li>
+<li> <p><code>residuals</code>  the residuals, that is response minus fitted values.
+</p>
+</li>
+<li> <p><code>fitted.values</code>  the fitted mean values
+</p>
+</li>
+<li> <p><code>df.residual</code>  the residual degrees of freedom.
+</p>
+</li>
+<li> <p><code>xlevels</code>   (only where relevant) a record of the levels of the factors used in fitting.
+</p>
+</li>
+<li> <p><code>model</code>  the fitted model.
+</p>
+</li>
+<li> <p><code>terms</code>  the terms object used.
+</p>
+</li></ul>
+
+
+
+<h3>Details</h3>
+
+<p>The <code>mars</code> function uses a formula-based approach to specify MARS models.
+The formula should follow the standard R formula syntax, with 'response' on the
+left-hand side and 'terms' on the right-hand side. The 'terms' specification can include
+main effects, interactions, and higher-order terms.
+</p>
+<p>The <code>mars</code> function fits a MARS model to the data, which involves automatically selecting
+basis functions (e.g., hinge functions) and their locations in the predictor space, and
+estimating coefficients for each basis function using a forward-backward algorithm. The resulting
+MARS model captures complex interactions between predictor variables, making it a powerful tool for modeling nonlinear relationships in data.
+</p>
+<p><code>mars.control</code> is used to create a MARS control object with the following arguments:
+</p>
+
+<ul>
+<li> <p><code>Mmax</code> max number of splits for mars function (default is 2)
+</p>
+</li>
+<li> <p><code>d</code> d value used in GCV criterion for mars (default is 3)
+</p>
+</li>
+<li> <p><code>trace</code> Logical value for if additional output should be printed when run (default is False)
+</p>
+</li></ul>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Evan Cribbie
+</p>
+<p>Huong Thi Mai Nguyen
+</p>
+<p>Christine Orcullo
+</p>
+
+
+<h3>References</h3>
+
+<p>Friedman, J. H. (1991). Multivariate Adaptive Regression Splines. The Annals of Statistics, 19(1), 1-67.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summary.mars</code> for summaries and <code>anova.mars</code> for the ANOVA table
+</p>
+<p><code>plot.mars</code> for visualizing the fitted model, <code>print.mars</code> for ouputting call and coefficients used for creating MARS object.
+</p>
+<p><code>predict.mars</code> for making predictions using the fitted model.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>#https://www.kaggle.com/datasets/joyshil0599/mlb-hitting-and-pitching-stats-through-the-years
+dat&lt;-read.csv("data/pitcher_data.csv")
+dat$AVG&lt;-as.numeric(dat$AVG)
+dat1&lt;-na.omit(dat)[1:500,]
+mars_obj&lt;-mars(Win~Games.played+Innings.pitched+Hit.Batsmen+base.on.balls+WHIP+AVG,dat1,mars.control(Mmax=8,d=3,trace=T))
+summary(mars_obj)
+plot(mars_obj)
+pred_dat&lt;-na.omit(dat)[500:600,]
+predict(mars_obj,pred_dat)
+
+#https://www.kaggle.com/datasets/neuromusic/avocado-prices
+dat2&lt;-read.csv("data/avocado.csv")[1:400,]
+mars_obj2&lt;-mars(AveragePrice~Total.Volume+X4046+X4225+X4770+Small.Bags+Large.Bags+XLarge.Bags+year,dat2)
+print(mars_obj2)
+anova(mars_obj2)
+
+#https://www.kaggle.com/datasets/grubenm/austin-weather
+dat3&lt;-read.csv("data/austin_weather.csv")[1:400,]
+dat3$PrecipitationSumInches&lt;-as.numeric(dat3$PrecipitationSumInches)
+dat3&lt;-na.omit(dat3)
+dat3&lt;-dat3[-305,]
+mars_obj3&lt;-mars(PrecipitationSumInches~HumidityAvgPercent+TempAvgF+SeaLevelPressureAvgInches+WindAvgMPH,dat3)
+summary(mars_obj3)
+</code></pre>
+
+
+</div>
+</body></html>
