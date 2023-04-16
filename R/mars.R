@@ -1,11 +1,10 @@
 #' mars: Multivariate Adaptive Regression Splines
-#' 
-#' @section
-#' Download from: https://github.com/ecribbie/EHC.mars.git
 #'
 #' @description
 #' `mars` is used for fitting Multivariate Adaptive Regression Splines
 #'  (MARS) models, which are non-parametric regression models that capture complex interactions between predictor variables.
+#'  
+#'  Download from: https://github.com/ecribbie/EHC.mars.git
 #'
 #' @param formula   a formula for linear model
 #' @param data      dataset with response variable (y) and explanatory variables
