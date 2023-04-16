@@ -12,6 +12,6 @@
 - LICENSE: licensing information
 
 # Contributions
-- Evan: 
+- Evan: Wrote r files for the mars function and implementation of other functions, added roxygen information for each function, wrote test.r file along with finding all of the datafiles used in the test.r file.
 - Hayley: created mars R documentation, create R documention for functions and objects, updated README file, updated DESCRIPTION file.
 - Christine: 
