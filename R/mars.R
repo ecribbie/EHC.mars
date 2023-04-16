@@ -1,4 +1,6 @@
 #' mars: Multivariate Adaptive Regression Splines
+#' 
+#' @section
 #' Download from: https://github.com/ecribbie/EHC.mars.git
 #'
 #' @description

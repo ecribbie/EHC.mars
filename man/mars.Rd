@@ -2,8 +2,7 @@
 % Please edit documentation in R/mars.R
 \name{mars}
 \alias{mars}
-\title{mars: Multivariate Adaptive Regression Splines
-Download from: https://github.com/ecribbie/EHC.mars.git}
+\title{mars: Multivariate Adaptive Regression Splines}
 \usage{
 mars(formula, data, control = mars.control())
 }
@@ -38,6 +37,10 @@ an object of class \code{"mars"} is a list contains the following components:
 \code{mars} is used for fitting Multivariate Adaptive Regression Splines
 (MARS) models, which are non-parametric regression models that capture complex interactions between predictor variables.
 }
+\section{Download from}{
+ https://github.com/ecribbie/EHC.mars.git
+}
+
 \section{Details}{
 
 The \code{mars} function uses a formula-based approach to specify MARS models.
